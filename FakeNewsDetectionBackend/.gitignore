@@ -1,0 +1,5 @@
+*.sqlite3
+*.pyc
+/FakeNewsDetectionBackend/Main/__pycache__
+/FakeNewsDetectionBackend/FakeNewsDetectionBackend/__pycache__
+/FakeNewsDetectionBackend/accounts/__pycache__
