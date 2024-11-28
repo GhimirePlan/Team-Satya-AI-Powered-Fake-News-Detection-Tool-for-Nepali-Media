@@ -72,7 +72,43 @@ export default function Main() {
             referenceMenuDialog.current.style.left = `calc(100vw - ${rect.width + 66}px)`
             referenceMenuDialog.current.style.top = `calc(100vh/2 - ${rect.height / 2 - 10}px)`
         }
+        referenceMenuDialog.current.focus = -1
+        //Handling the keydown event to manage context menu up and down
+        referenceMenuDialog.current.onkeydown = (e) => {
+            e.preventDefault()
+            //handling menu down event
+            if (e.key === "ArrowDown") {
+                const buttons = referenceMenuDialog.current.querySelectorAll("button")
+                if (referenceMenuDialog.current.focus === buttons.length - 1 || referenceMenuDialog.current.focus === -1) {
+                    referenceMenuDialog.current.focus = 0
+                    buttons[referenceMenuDialog.current.focus].focus();
+                } else {
+                    referenceMenuDialog.current.focus++;
+                    buttons[referenceMenuDialog.current.focus].focus();
+                }
+            }
+            //handling menu up event
+            if (e.key === "ArrowUp") {
+                const buttons = referenceMenuDialog.current.querySelectorAll("button")
+                if (referenceMenuDialog.current.focus <= 0) {
+                    referenceMenuDialog.current.focus = buttons.length - 1
+                    buttons[referenceMenuDialog.current.focus].focus();
+                } else {
+                    referenceMenuDialog.current.focus--;
+                    buttons[referenceMenuDialog.current.focus].focus();
+                }
+            }
+            //clicking the focused button when enter clicked
+            if (e.key === "Enter") {
+                const buttons = referenceMenuDialog.current.querySelectorAll("button")
+                try {
+                    buttons[referenceMenuDialog.current.focus].click()
+                } catch (error) {
 
+                }
+            }
+            return false
+        }
         //on dom destroyed
         return ()=>{
 
@@ -105,19 +141,25 @@ export default function Main() {
 }
 //component to show up the result of the 
 function ResultFrame({ MainSettings }) {
+    const mainResultUIFrame=userRef(document.createElement("dialog"))
+    MainSettings.mainResultUIFrame=mainResultUIFrame
     return (
-        <dialog></dialog>
+        <dialog ref={mainResultUIFrame}></dialog>
     )
 }
 //component to send report issues
 function ReportFrame({ MainSettings }) {
+    const ReportIssuesFrame=userRef(document.createElement("dialog"))
+    MainSettings.ReportIssuesFrame=ReportIssuesFrame
     return (
-        <dialog></dialog>
+        <dialog ref={ReportIssuesFrame}></dialog>
     )
 }
 //component to send feedback of users
 function FeedbackFrame({ MainSettings }) {
+    const FeedBackFrame=userRef(document.createElement("dialog"))
+    MainSettings.FeedBackFrame=FeedBackFrame
     return (
-        <dialog></dialog>
+        <dialog ref={FeedBackFrame}></dialog>
     )
 }
