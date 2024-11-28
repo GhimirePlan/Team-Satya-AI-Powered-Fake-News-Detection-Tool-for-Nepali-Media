@@ -37,7 +37,7 @@ def FeedbackPage(request):
             }),content_type="application/json")
     #response when invalid/(other then post) 
     return HttpResponse("Invalid Request ", content_type="text/html", status=400)
-def ReportIssue(request):
+def ReportIssuePage(request):
     if request.method=="POST":
         #checking for user authentication
         if request.user.is_authenticated:
