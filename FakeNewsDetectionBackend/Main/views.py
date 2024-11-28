@@ -2,24 +2,35 @@ from django.shortcuts import render,HttpResponse
 import json
 from .models import Feedback,ReportIssue,TodaysNews,News
 from datetime import datetime 
+from .webscrapper import WebScrapper
 # Create your views here.
-def AddTodayNewsIfNotExists(request):
+def AddTodayNewsIfNotExists():
     today=datetime.today().date()
     if TodaysNews.objects.filter(date=today).exists():
         TodaysNews.objects.create()
+        scrapper=WebScrapper()
+        data:News
         #add todays news 
+        for data in scrapper.lists:
+            News.objects.create(title=data.title,description=data.description,source=data.source)
         
     
 def MainPage(request):
+    #checking and add today news
+    #AddTodayNewsIfNotExists()
     return render (request, "index.html")
 
 def ResultPage(request):
+    #checking and add today news
+    #AddTodayNewsIfNotExists()
     if not request.GET.get("q"):
         return render (request,"error_404.html")
     query=request.GET.get("q")
     #furhter handling from model trainer to search reasult and get result to render to the dom
     return render (request,"searchreasult.html",{})
 def ResultForExtension(request):
+    #checking and add today news
+    #AddTodayNewsIfNotExists()
     if request.method=="POST":
         query=request.POST["content"]
         #further process from model 
