@@ -495,6 +495,7 @@ function ResultFrame({ MainSettings }) {
                 resultframe.current.querySelector(".date").onclick = () => {
                     MainSettings.ReportIssuesFrame.current.showModal()
                 }
+                sharebuttons.current.style.display = 'none'
                 resultframe.current.querySelector(".source").onclick = null
                 resultframe.current.querySelector("h3").innerHTML = "This is a Fake News"
             }
@@ -526,7 +527,7 @@ function ResultFrame({ MainSettings }) {
 
                     </div>
                     <div id="social-share" style={{
-                        displa: "none"
+                        display: "none"
                     }} ref={sharebuttons}>
 
                         <h3>Share this result:</h3>

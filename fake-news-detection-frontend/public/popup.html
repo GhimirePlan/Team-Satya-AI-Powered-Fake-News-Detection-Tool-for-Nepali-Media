@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <title>Fake News Detection</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="MainChromeExtension">
+  <div class="container">
+    <header>
+      <h3 id="title">Fake News Detection</h3>
+      <div id="language-switcher">
+        <div class="toggle-container" id="toggle-container">
+          <div class="toggle-switch" id="toggle-switch"></div><span class="label left" id="en-label">EN</span><span
+            class="label right" id="ne-label">NE</span>
+        </div><img src="img/logo1.png" alt="Logo" width="100px" height="70px" style="width: 100px;">
+      </div>
+    </header>
+    <div class="content">
+      <form id="news-form"><label for="news-text" id="news-text-label">Enter the news text:</label><textarea
+          id="news-text" placeholder="Paste or type news content here..." autocomplete="off"
+          spellcheck="false"></textarea>
+        <div class="error"></div><button type="button" id="submit-button">Predict</button>
+      </form>
+      <div id="prediction-result">
+        <div class="loadingicon" style="display: none;"><svg fill="none" viewBox="0 0 66 66"
+            style="color: rgb(56, 173, 72); overflow: visible; width: 50px;">
+            <circle cx="33" cy="33" fill="none" r="28" stroke="rgba(0,0,0,0.44)" stroke-width="8"></circle>
+            <circle cx="33" cy="33" fill="none" r="28" stroke="currentColor" stroke-dasharray="1, 174"
+              stroke-dashoffset="306" stroke-linecap="round" stroke-width="8"
+              style="animation: 0.466667s linear 0s infinite normal none running spinners-react-circular;"></circle>
+          </svg></div>
+        <div class="content-component" style="display: block;">
+          <h3>nepali news</h3>
+          <div class="description">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint quas perferendis ad
+            ratione, inventore doloribus fugit aliquid dolores tempore neque, asperiores nihil! Consequatur,
+            repellendus?
+            Adipisci laborum similique consequatur? Et, consequatur.</div>
+          <div class="date remove">3rd november 2024</div>
+          <div class="source report">kantipur</div>
+        </div>
+      </div>
+      <div id="social-share" style="display: block;"><textarea id="news-text-fedback"
+          placeholder="Enter Feedback..."></textarea>
+        <div class="error"></div>
+        <div class="button-group"><button id="feedback-btn">Close Feedback Mode</button></div>
+        <h3>Share this result:</h3>
+        <div class="share-buttons"><button class="share-button" id="share-facebook"><img
+              src="https://facebook.com/favicon.ico" alt=""></button><button class="share-button"
+            id="share-twitter"><img src="https://x.com/favicon.ico" alt=""></button><button class="share-button"
+            id="share-whatsapp"><img
+              src="https://cdn3.iconfinder.com/data/icons/social-media-chamfered-corner/154/whatsapp-512.png"
+              alt=""></button><button class="share-button" id="share-more">more</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
