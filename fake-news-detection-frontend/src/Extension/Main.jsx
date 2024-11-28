@@ -109,6 +109,13 @@ export default function Main() {
             }
             return false
         }
+        //close menu when clicked outside the box
+        referenceMenuDialog.current.onclick = (e) => {
+            const rect = referenceMenuDialog.current.getBoundingClientRect()
+            if (e.x < rect.x || e.x > rect.x + rect.width + 5 || e.y < rect.y + 15 || e.y > rect.y + rect.height - 15) {
+                referenceMenuDialog.current.close()
+            }
+        }
         //on dom destroyed
         return ()=>{
 
