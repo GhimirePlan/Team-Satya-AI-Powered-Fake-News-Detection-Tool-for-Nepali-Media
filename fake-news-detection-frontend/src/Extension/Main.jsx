@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SpinnerCircular } from 'spinners-react';
 
 import './styles.css'
@@ -334,25 +334,101 @@ function UIWindow({ MainSettings }) {
 }
 //component to show up the result of the 
 function ResultFrame({ MainSettings }) {
-    const mainResultUIFrame = useRef(document.createElement("dialog"))
-    MainSettings.mainResultUIFrame = mainResultUIFrame
-    return (
-        <dialog ref={mainResultUIFrame}></dialog>
-    )
+    const mainResultUIFrame = useRef(document.createElement('dialog'))
+    const loading = useRef(document.createElement('div'))
+    const resultframe = useRef(document.createElement('div'))
+    const sharebuttons = useRef(document.createElement('div'))
+    MainSettings.mainResultUIFrame=mainResultUIFrame
+    return <>
+        <dialog className='result' ref={mainResultUIFrame}>
+            <div className="inner">
+                <div className="loadingicon" ref={loading}>
+                    <SpinnerCircular thickness={200} speed={300} />
+                </div>
+                <div className="content-component" ref={resultframe}>
+                    <h3> News From Nepal</h3>
+                    <div className="description">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi perferendis nisi eos aperiam veritatis vitae dolorum exercitationem corrupti praesentium ea, eligendi maxime alias minus dolorem dolore! Doloremque inventore voluptatem eius?
+                    </div>
+                    <div className="date">
+                        2<sup>nd</sup> November
+                    </div>
+                    <div className="source report">
+
+                    </div>
+                    <div id="social-share" style={{
+                        displa: "none"
+                    }} ref={sharebuttons}>
+                        
+                        <h3>Share this result:</h3>
+                        <div className="share-buttons">
+                            <button className="share-button" id="share-facebook">
+                                <img src="https://facebook.com/favicon.ico" alt="" />
+                            </button>
+                            <button className="share-button" id="share-twitter">
+                                <img src="https://x.com/favicon.ico" alt="" />
+                            </button>
+                            <button className="share-button" id="share-whatsapp">
+                                <img src="https://cdn3.iconfinder.com/data/icons/social-media-chamfered-corner/154/whatsapp-512.png" alt="" />
+                            </button>
+                            <button className="share-button" id="share-more">
+                                more
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dialog>
+    </>
 }
 //component to send report issues
 function ReportFrame({ MainSettings }) {
     const ReportIssuesFrame = useRef(document.createElement("dialog"))
+    const [issue, setIssue] = useState("")
+    const [error, setError] = useState("")
+    const onclickButton=()=>{
+        
+    }
     MainSettings.ReportIssuesFrame = ReportIssuesFrame
-    return (
-        <dialog ref={ReportIssuesFrame}></dialog>
-    )
+    return <>
+        <dialog className='Response' ref={ReportIssuesFrame}>
+            <div className="main">
+                <h3>Send Feedback - Fake News Detector</h3>
+                <fieldset>
+                    <legend>Feedback Detail</legend>
+                    <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={issue} onChange={(e) => { setIssue(e.target.value) }}></textarea>
+                </fieldset>
+                <div className="highlight error">
+                    {error}
+                </div>
+                <button onClick={onclickButton}> Submit </button>
+            </div>
+        </dialog>
+    </>
 }
 //component to send feedback of users
 function FeedbackFrame({ MainSettings }) {
     const FeedBackFrame = useRef(document.createElement("dialog"))
+    const [feedback, setFeedback] = useState("")
+    const [error, setError] = useState("")
+    const onclickButton=()=>{
+
+    }
     MainSettings.FeedBackFrame = FeedBackFrame
-    return (
-        <dialog ref={FeedBackFrame}></dialog>
-    )
+    return <>
+        <dialog className='Response' ref={FeedBackFrame}>
+            <div className="main">
+                <h3>Send Feedback - Fake News Detector</h3>
+                <fieldset>
+                    <legend>Feedback Detail</legend>
+                    <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={feedback} onChange={(e) => { setFeedback(e.target.value) }}></textarea>
+                </fieldset>
+                <div className="highlight error">
+                    {error}
+                </div>
+                <button onClick={onclickButton}> Submit </button>
+            </div>
+        </dialog>
+    </>
 }
