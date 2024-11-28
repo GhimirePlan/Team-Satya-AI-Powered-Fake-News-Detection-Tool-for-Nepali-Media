@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react'
+import { SpinnerCircular } from 'spinners-react';
+
 import './styles.css'
 export default function Main() {
     //reference to side buton for content js
@@ -6,7 +8,7 @@ export default function Main() {
     //creating reference to the menuitems for side buttons
     const referenceMenuDialog = useRef(document.createElement('dialog'))
     //store for recently selected text in document to send in request to check 
-    const recentSelectedText = userRef("")
+    const recentSelectedText = useRef("")
     const MainSettings = {
         onreportAdd: () => {
         },
@@ -19,6 +21,8 @@ export default function Main() {
     }
     //don dom loaded
     useEffect(() => {
+        const requestFakeNewsCheck=()=>{
+        }
         MainUiButton.current.onclick = () => {
             const options = [
                 'Check Selected',
@@ -150,9 +154,9 @@ export default function Main() {
 }
 //component to show ui of extension
 function UIWindow({ MainSettings }) {
-    const MainUIFrame = userRef(document.createElement("dialog"))
+    const MainUIFrame = useRef(document.createElement("dialog"))
     const newsTextArea = useRef(document.createElement("div"));
-    const feedbacktextarea =useRef(document.createElement("div"));
+    const feedbacktextarea = useRef(document.createElement("div"));
     const submitButton = useRef(document.createElement("div"));
     const predictionResult = useRef(document.createElement("div"));
     const feedbackBtn = useRef(document.createElement("div"));
@@ -161,17 +165,108 @@ function UIWindow({ MainSettings }) {
     const newsTextLabel = useRef(document.createElement("div"));
     const feedbackHeader = useRef(document.createElement("div"));
     const socialShareDiv = useRef(document.createElement("div"));
-    const shareFacebookButton =useRef(document.createElement("div"));
+    const shareFacebookButton = useRef(document.createElement("div"));
     const CopyLink = useRef(document.createElement("div"));
     const shareTwitterButton = useRef(document.createElement("div"));
     const shareWhatsAppButton = useRef(document.createElement("div"));
     MainSettings.MainUIFrame = MainUIFrame
+    useEffect(() => {
+        let currentLanguage="en"
+        MainUIFrame.showModal = () => {
+            predictionResult.current.firstElementChild.style.display = "none"
+            MainUIFrame.current.ShowModal()
+        }
+        // Fake news prediction function
+        predictionResult.current.firstElementChild.style.display = "none"
+        function predictNews(content) {
+            
+        }
+        
+        // Update language
+        function updateLanguage() {
+            title.current.textContent = currentLanguage === 'en' ? 'Fake News Detection' : 'झुटो समाचार पत्ता लगाउने';
+            newsTextLabel.current.textContent = currentLanguage === 'en' ? 'Enter the news text:' : 'समाचारको पाठ प्रविष्ट गर्नुहोस्:';
+            feedbackHeader.current.textContent = currentLanguage === 'en' ? 'Insert News\' Text Here:' : 'यहाँ समाचारको पाठ राख्नुहोस्:';
+            feedbackBtn.current.textContent =currentLanguage === 'en'
+            ? 'send Feedback'
+            : 'प्रतिक्रिया पठाउनुहोस्';
+            submitButton.current.textContent = currentLanguage === 'en' ? 'Predict' : 'पूर्वानुमान गर्नुहोस्';
+            newsTextArea.current.placeholder =
+                currentLanguage === 'en' ? 'Paste or type news content here...' : 'यहाँ समाचारको पाठ टाइप वा पेस्ट गर्नुहोस्...';
+
+            if (newsTextArea.current.nextElementSibling.textContent.trim()) {
+                newsTextArea.current.nextElementSibling.innerHTML = currentLanguage === 'en'
+                    ? 'Please enter some news content!'
+                    : 'कृपया केही समाचार प्रविष्ट गर्नुहोस्!'
+            }
+            if (feedbacktextarea.current.nextElementSibling.textContent.trim()) {
+                feedbacktextarea.current.nextElementSibling.innerHTML = currentLanguage === 'en'
+                    ? 'Please enter some content!'
+                    : 'कृपया केही सामग्री प्रविष्ट गर्नुहोस्!'
+            }
+        }
+        socialShareDiv.current.style.display = 'none';
+        // Predict news when submit button is clicked
+        submitButton.current.addEventListener('click', function () {
+            const newsContent = newsTextArea.value.trim();
+            if (newsContent.length >= 5) {
+                predictNews(newsContent);
+                newsTextArea.value = ""
+                submitButton.current.disabled = true
+
+            } else {
+                predictionResult.current.style.display = 'none';
+                socialShareDiv.current.style.display = 'none';
+                newsTextArea.current.nextElementSibling.innerHTML = currentLanguage === 'en'
+                    ? 'Please enter some news content!(atleast 5 character)'
+                    : 'कृपया केही समाचार प्रविष्ट गर्नुहोस्!'
+            }
+        });
+        feedbackBtn.onclick = (e) => {
+            e.preventDefault()
+            const feedback = feedbacktextarea.current.value.trim();
+            if (feedback.length >= 5) {
+                feedbacktextarea.current.nextElementSibling.innerHTML = ""
+                feedbacktextarea.current.value = ''
+                // ...
+                MainUIFrame.current.close()
+                if (window.chrome) {
+                    window.chrome.runtime.sendMessage({
+                        command: "Feedback",
+                        feedback
+                    }, (response) => {
+                    });
+                }
+
+            } else {
+                // predictionResult.current.style.display = 'none';
+                // socialShareDiv.current.style.display = 'none';
+                feedbacktextarea.current.nextElementSibling.innerHTML = currentLanguage === 'en'
+                    ? 'Please enter some content!(atleast 5 character)'
+                    : 'कृपया केही सामग्री प्रविष्ट गर्नुहोस्!'
+            }
+        }
+
+
+        // Language toggle
+        toggleContainer.current.onclick = () => {
+            toggleContainer.current.classList.toggle('active');
+            currentLanguage = currentLanguage === 'en' ? 'ne' : 'en';
+            updateLanguage();
+        }
+
+        // Initialize language
+        updateLanguage();
+        return () => {
+
+        }
+    })
     return (
         <dialog ref={MainUIFrame}>
             <div id='mainResultUIFrame'>
                 <div className="container">
                     <header>
-                        <h3 id="title" ref={title}>Fake News Detection</h3>
+                        <h3 id=".current" ref={title}>Fake News Detection</h3>
                         <div id="language-switcher">
                             <div className="toggle-container" ref={toggleContainer} id="toggle-container">
                                 <div className="toggle-switch" id="toggle-switch"></div>
@@ -184,8 +279,8 @@ function UIWindow({ MainSettings }) {
 
                     <div className="content">
                         <form id="news-form">
-                            <label htmlFor="news-text" ref={newsTextLabel}  id="news-text-label">Enter the news text:</label>
-                            <textarea id="news-text" ref={newsTextArea}  placeholder="Paste or type news content here..."></textarea>
+                            <label htmlFor="news-text" ref={newsTextLabel} id="news-text-label">Enter the news text:</label>
+                            <textarea id="news-text" ref={newsTextArea} placeholder="Paste or type news content here..."></textarea>
                             <div className="error" ></div>
                             <button type="button" id="submit-button" ref={submitButton}>Predict</button>
                         </form>
@@ -230,7 +325,7 @@ function UIWindow({ MainSettings }) {
                                 </button>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -239,7 +334,7 @@ function UIWindow({ MainSettings }) {
 }
 //component to show up the result of the 
 function ResultFrame({ MainSettings }) {
-    const mainResultUIFrame = userRef(document.createElement("dialog"))
+    const mainResultUIFrame = useRef(document.createElement("dialog"))
     MainSettings.mainResultUIFrame = mainResultUIFrame
     return (
         <dialog ref={mainResultUIFrame}></dialog>
@@ -247,7 +342,7 @@ function ResultFrame({ MainSettings }) {
 }
 //component to send report issues
 function ReportFrame({ MainSettings }) {
-    const ReportIssuesFrame = userRef(document.createElement("dialog"))
+    const ReportIssuesFrame = useRef(document.createElement("dialog"))
     MainSettings.ReportIssuesFrame = ReportIssuesFrame
     return (
         <dialog ref={ReportIssuesFrame}></dialog>
@@ -255,7 +350,7 @@ function ReportFrame({ MainSettings }) {
 }
 //component to send feedback of users
 function FeedbackFrame({ MainSettings }) {
-    const FeedBackFrame = userRef(document.createElement("dialog"))
+    const FeedBackFrame = useRef(document.createElement("dialog"))
     MainSettings.FeedBackFrame = FeedBackFrame
     return (
         <dialog ref={FeedBackFrame}></dialog>
