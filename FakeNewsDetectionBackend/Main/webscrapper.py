@@ -7,7 +7,7 @@ from  typing import List
 class Data:
     title:str 
     description:str 
-    url:str
+    source:str
 
 class WebScrapper:
     lists:List[Data]=[]
@@ -65,7 +65,7 @@ class WebScrapper:
                     data=Data()
                     data.title=heading 
                     data.description=subheading
-                    data.url=link 
+                    data.source=link 
                     self.lists.append(data)
                     extracted_data += 1
         except Exception as e:

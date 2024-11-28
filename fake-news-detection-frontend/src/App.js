@@ -1,4 +1,4 @@
-import Main from "./Extension/Main.tsx"
+import Main from "./Extension/Main.jsx"
 function App() {
   return (
   <Main/>
