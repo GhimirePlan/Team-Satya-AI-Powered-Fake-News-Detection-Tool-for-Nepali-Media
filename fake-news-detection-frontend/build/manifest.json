@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "Fake News Detection Extension",
+    "key": "fajdklfajlfkajreirueoiureoirueou",
+    "version": "1.0.0",
+    "description": "A Chrome extension that predicts whether news articles are likely to be fake or not",
+    "icons": {
+        "16": "img/logo1.png"
+    },
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "action": {
+        "icons": {
+            "16": "img/logo1.png"
+        },
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "storage",
+        "tabs",
+        "scripting",
+        "webRequest",
+        "clipboardWrite",
+        "contextMenus",
+        "cookies"
+    ],
+    "content_scripts": [
+        {
+            "js": [
+                "static/js/main.816ad9f6.js"
+            ],
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ]
+        }
+    ]
+}
