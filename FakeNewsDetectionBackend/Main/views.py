@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse
 import json
 from .models import Feedback,ReportIssue,TodaysNews,News
 from datetime import datetime 
+import random
 from .webscrapper import WebScrapper
 # Create your views here.
 def AddTodayNewsIfNotExists():
@@ -26,8 +27,13 @@ def ResultPage(request):
     if not request.GET.get("q"):
         return render (request,"error_404.html")
     query=request.GET.get("q")
+    context={
+            "searchfor":query,
+            "authentic":"authenticated",
+            "accuracy":random.randint(0,100)
+        }
     #furhter handling from model trainer to search reasult and get result to render to the dom
-    return render (request,"searchreasult.html",{})
+    return render (request,"searchreasult.html",context)
 def ResultForExtension(request):
     #checking and add today news
     #AddTodayNewsIfNotExists()
@@ -35,18 +41,10 @@ def ResultForExtension(request):
         query=request.POST["content"]
         #further process from model 
         context={
-        "news": {
-            "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint quas perferendis ad ratione, inventore doloribus fugit aliquid dolores tempore neque, asperiores nihil! Consequatur, repellendus? Adipisci laborum similique consequatur? Et, consequatur.",
-            "date": '3rd november 2024',
-            "title": "nepali news",
-            "source": {
-                "title": "kantipur",
-                "url": "https://kantipur.coms"
-            }
-        },
-        "searchfor":'',
-        "status":True
-    }
+            "searchfor":query,
+            "authentic":"authenticated",
+            "accuracy":random.randint(0,100)
+        }
         return HttpResponse(json.dumps(context),content_type="application/json")
     return HttpResponse(json.dumps({
         "status":False

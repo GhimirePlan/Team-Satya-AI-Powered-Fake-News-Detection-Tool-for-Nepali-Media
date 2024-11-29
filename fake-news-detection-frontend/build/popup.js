@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   // Update social share buttons
   function updateSocialShareButtons(message) {
+    const link = `/search_result?q=${message}`
     socialShareDiv.style.display = 'block'
     shareFacebookButton.onclick = function () {
       window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "facebook", searchfor: message })

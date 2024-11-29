@@ -311,11 +311,11 @@ function UIWindow({ MainSettings }) {
                             console.error("Failed to copy the link:", error);
                         });
                 })
-            };
+            }; 
         }
         // Update language
         function updateLanguage() {
-            title.current.textContent = currentLanguage === 'en' ? 'Fake News Detection' : 'झुटो समाचार पत्ता लगाउने';
+            title.current.textContent = currentLanguage === 'en' ? 'News Authenticity Detector' : 'समाचार प्रमाणिकता परीक्षक';
             newsTextLabel.current.textContent = currentLanguage === 'en' ? 'Enter the news text:' : 'समाचारको पाठ प्रविष्ट गर्नुहोस्:';
             feedbackHeader.current.textContent = currentLanguage === 'en' ? 'Insert Feedback Message:' : 'यहाँ प्रतिक्रिया राख्नुहोस्:';
             feedbackBtn.current.textContent = currentLanguage === 'en'
@@ -395,7 +395,7 @@ function UIWindow({ MainSettings }) {
                 <div className="close-button" ref={closeBtn}>X</div>
                 <div className="container">
                     <header>
-                        <h3 id=".current" ref={title}>Fake News Detection</h3>
+                        <h3 id=".current" ref={title}>News Authenticity Detector</h3>
                         <div id="language-switcher">
                             <div className="toggle-container" ref={toggleContainer} id="toggle-container">
                                 <div className="toggle-switch" id="toggle-switch"></div>
@@ -420,12 +420,11 @@ function UIWindow({ MainSettings }) {
                             </div>
                             <div className="content-component" style={{ display: "none" }} >
                                 <h3> </h3>
-                                <div className="description">
-                                </div>
                                 <div className="date">
                                 </div>
                                 <div className="source report">
-
+                                </div>
+                                <div className="description">
                                 </div>
                             </div>
                         </div>
@@ -627,7 +626,7 @@ function ReportFrame({ MainSettings }) {
     return <>
         <dialog className='Response' ref={ReportIssuesFrame}>
             <div className="main">
-                <h3>Report Issue - Fake News Detector</h3>
+                <h3>Report Issue - News Authenticity Detector</h3>
                 <fieldset>
                     <legend>Issue Detail</legend>
                     <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={issue} onChange={(e) => { setIssue(e.target.value) }}></textarea>
@@ -687,7 +686,7 @@ function FeedbackFrame({ MainSettings }) {
     return <>
         <dialog className='Response' ref={FeedBackFrame}>
             <div className="main">
-                <h3>Send Feedback - Fake News Detector</h3>
+                <h3>Send Feedback - News Authenticity Detector</h3>
                 <fieldset>
                     <legend>Feedback Detail</legend>
                     <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={feedback} onChange={(e) => { setFeedback(e.target.value) }}></textarea>

@@ -33,7 +33,7 @@
     "content_scripts": [
         {
             "js": [
-                "static/js/main.816ad9f6.js"
+                "static/js/main.b614172e.js"
             ],
             "matches": [
                 "http://*/*",

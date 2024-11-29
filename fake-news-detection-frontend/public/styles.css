@@ -79,7 +79,7 @@ body.MainChromeExtension .container label {
 #title {
   font-size: 25px;
   font-weight: bold;
-  color: #2575fc;
+  color: #2cb57f;
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -91,7 +91,9 @@ body.MainChromeExtension .container label {
   position: relative;
   width: 100px;
   height: 45px;
-  background-color: #ccc;
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/024/084/663/small/golden-light-effect-on-blue-abstract-hexagon-pattern-background-3d-render-photo.jpg");
+  background-size: cover; /* Ensures the background image covers the container */
+  background-position: center; /* Centers the image */
   border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.4s ease;
@@ -101,6 +103,7 @@ body.MainChromeExtension .container label {
   padding: 5px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
 
 .toggle-switch {
   position: absolute;
