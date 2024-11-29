@@ -24,6 +24,6 @@ static_urlpatterns = [
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include("Main.routes") ),
-    path("accounts",include("accounts.routes") ),
+    path("accounts/",include("accounts.routes") ),
     path("", include(static_urlpatterns)),
 ]

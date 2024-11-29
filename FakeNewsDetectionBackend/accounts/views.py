@@ -1,9 +1,16 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.password_validation import validate_password
 # Create your views here.
+def logoutPage(request):
+    if request.method=="POST":
+        logout(request)
+        return redirect("login")
+    return HttpResponse("Failed")
 def Login(request):
+    if request.user.is_authenticated:
+        return redirect("/")
     error=''
     if request.method=="POST":
         username=request.POST["username"]
@@ -11,6 +18,8 @@ def Login(request):
         user=authenticate(username=username,password=password)
         if user:
             login(request,user)
+            if request.GET.get("next"):
+                return redirect(request.GET.get("next"))
             return redirect("/")
             
         else:
@@ -21,6 +30,8 @@ def Login(request):
 
     return render(request,"login.html",{"error":error})
 def Register(request):
+    if request.user.is_authenticated:
+        return redirect("/")
     errors={
         "username":"",
         "first_name":"",
@@ -53,6 +64,7 @@ def Register(request):
                         errors['password_conf']="Both password must match"
                 except Exception as e:
                     errors['password']=str(e)
+    print(errors)
     return render(request,'register.html', errors)
 
         

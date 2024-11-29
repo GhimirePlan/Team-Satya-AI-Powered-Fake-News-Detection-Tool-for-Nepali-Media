@@ -10,9 +10,14 @@ class ReportIssue(models.Model):
     message=models.TextField()
 
 class News(models.Model):
-    title=models.TextField()
+    # title=models.TextField()
     description=models.TextField()
     source=models.CharField(max_length=255)
     isfake=models.BooleanField(default=False)
+    
+    def __str__(self) -> str:
+        return self.source
 class TodaysNews(models.Model):
     date=models.DateField(auto_now_add=True)
+    def __str__(self) -> str:
+        return self.date.strftime(f"%d/%m/%Y")
