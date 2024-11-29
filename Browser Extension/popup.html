@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+  <title>Fake News Detection</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 id="title">Fake News Detection</h1>
+      <div id="language-switcher">
+        <div class="toggle-container" id="toggle-container">
+          <div class="toggle-switch" id="toggle-switch"></div>
+          <span class="label left" id="en-label">EN</span>
+          <span class="label right" id="ne-label">NE</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <img src="img/logo1.png" alt="Logo" width="100px" height="70px" style="margin-top: -500px;">
+      <div class="button-group">
+        <button id="auto-paste">Auto Paste</button>
+        <button id="feedback-btn">Switch to Feedback Mode</button>
+      </div>
+  
+      <form id="news-form">
+        <label for="news-text" id="news-text-label">Enter the news text:</label>
+        <textarea id="news-text" placeholder="Paste or type news content here..."></textarea>
+        <button type="button" id="submit-button">Predict</button>
+      </form>
+      <p id="prediction-result"></p>
+
+      <div id="social-share" style="display:none;">
+        <h3>Share this result:</h3>
+        <div class="share-buttons">
+          <button class="share-button" id="share-facebook">
+            <i class="fab fa-facebook-f"></i>
+          </button>
+          <button class="share-button" id="share-twitter">
+            <i class="fab fa-twitter"></i> 
+          </button>
+          <button class="share-button" id="share-whatsapp">
+            <i class="fab fa-whatsapp"></i> 
+          </button>
+        </div>
+      </div>
+      <div id="feedback-section" style="display:none;">
+        <h2 id="feedback-header">Insert News' Text Here:</h2>
+        <form id="feedback-form">
+          <textarea id="feedback-news-text" placeholder="Enter the news text here..." required></textarea>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="news-status" value="real" required> Real News
+            </label>
+            <label>
+              <input type="radio" name="news-status" value="fake" required> Fake News
+            </label>
+          </div>
+          <button type="submit">Submit Feedback</button>
+        </form>
+      </div>
+    </div>
+
+    
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

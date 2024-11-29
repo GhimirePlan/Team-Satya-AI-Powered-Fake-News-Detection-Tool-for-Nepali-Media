@@ -9,3 +9,10 @@ class ReportIssue(models.Model):
     user = models.ForeignKey(User,related_name="issues", on_delete=models.CASCADE)
     message=models.TextField()
 
+class News(models.Model):
+    title=models.TextField()
+    description=models.TextField()
+    source=models.CharField(max_length=255)
+    isfake=models.BooleanField(default=False)
+class TodaysNews(models.Model):
+    date=models.DateField(auto_now_add=True)

@@ -1,25 +1,26 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+    "manifest_version": 3,
+    "name": "Fake News Detection",
+    "key": "fajdklfajlfkajreirueoiureoirueou",
+    "version": "1.0.0",
+    "description": "A Basic Application to track false informations",
+    "icons": {},
+    "background": {
+        "service_worker": "service-worker.js"
     },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+    "action": {
+        "icons": {},
+        "default_title": "Fake News Detection",
+        "default_popup": "popup.html"
     },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+    "permissions": [],
+    "content_scripts": [
+        {
+            "js": [],
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ]
+        }
+    ]
 }

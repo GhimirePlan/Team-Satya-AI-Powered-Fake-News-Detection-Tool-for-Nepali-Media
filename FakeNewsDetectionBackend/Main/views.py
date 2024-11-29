@@ -1,7 +1,15 @@
 from django.shortcuts import render,HttpResponse
 import json
-from .models import Feedback,ReportIssue
+from .models import Feedback,ReportIssue,TodaysNews,News
+from datetime import datetime 
 # Create your views here.
+def AddTodayNewsIfNotExists(request):
+    today=datetime.today().date()
+    if TodaysNews.objects.filter(date=today).exists():
+        TodaysNews.objects.create()
+        #add todays news 
+        
+    
 def MainPage(request):
     return render (request, "index.html")
 
