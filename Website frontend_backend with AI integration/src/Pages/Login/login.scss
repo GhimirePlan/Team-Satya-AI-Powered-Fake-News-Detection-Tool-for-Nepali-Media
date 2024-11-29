@@ -1,0 +1,92 @@
+.Login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #00f2b6, #00f2b6);
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+
+  &__header {
+    text-align: center;
+    &__heading {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+  }
+
+  .Login__form {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      .error-vaidation{
+        font-size: 14px;
+          padding-bottom: 5px;
+          padding-left: 12px;
+          color: red;
+      }
+      .form-group {
+        margin-bottom: 15px;
+        label {
+          font-size: 3rem;
+          margin-bottom: 5px;
+          display: block;
+        }
+        input {
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+      }
+      
+      .btn-login {
+        background: #66a6ff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        &:hover {
+          background: #89f7fe;
+          transform: scale(1.05);
+        }
+      }
+    }
+
+    // Register Link Section
+    .register-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 2rem;
+      color: #fff;
+
+      p {
+        margin: 0;
+      }
+
+      .btn-register {
+        background: none;
+        color: #66a6ff;
+        border: none;
+        font-size: 3rem;
+        text-decoration: underline;
+        cursor: pointer;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #89f7fe;
+        }
+      }
+    }
+  }
+}

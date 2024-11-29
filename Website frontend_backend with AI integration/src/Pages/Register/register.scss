@@ -1,0 +1,207 @@
+.Register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #00f2b6, #00d2f2);
+  font-family: "Arial", sans-serif;
+  color: #fff;
+
+  &__header {
+    text-align: center;
+
+    &__heading {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+  }
+
+  .Register__header__heading {
+    font-size: 7rem;
+  }
+
+  .Register__form {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+
+      .form-group {
+        margin-bottom: 3px;
+
+        label {
+          font-size: 3rem;
+          margin-bottom: 5px;
+          display: block;
+        }
+
+        input {
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          font-size: 2rem;
+        }
+      }
+
+      .btn-register {
+        background: #66a6ff;
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 5px;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #89f7fe;
+          transform: scale(1.05);
+        }
+      }
+    }
+
+    .register-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 3rem;
+
+      p {
+        margin: 0;
+        font-weight: 2rem;
+      }
+
+      .btn-login {
+        background: none;
+        color: #66a6ff;
+        border: none;
+        font-weight: 4rem;
+        font-size: 3rem; /* Increased font size */
+        text-decoration: underline;
+        cursor: pointer;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #89f7fe;
+        }
+      }
+    }
+  }
+
+  // Responsive Design for Mobile
+  @media (max-width: 768px) {
+    padding: 10px;
+
+    .Register__header__heading {
+      font-size: 2rem;
+    }
+
+    .Register__form {
+      padding: 15px 20px;
+      width: 100%;
+      max-width: 350px;
+
+      .form-container {
+        .form-group {
+          input {
+            font-size: 2rem;
+            padding: 8px;
+          }
+        }
+
+        .btn-register {
+          padding: 10px;
+          font-size: 1.2rem; // Adjusted font size for mobile screens
+        }
+      }
+
+      .register-link {
+        font-size: 1.2rem;
+
+        .btn-login {
+          font-size: 2rem; // Adjusted for mobile screens
+        }
+      }
+    }
+  }
+
+  // Additional Effect for Ultra Small Screens
+  @media (max-width: 480px) {
+    .Register__form {
+      padding: 10px;
+      max-width: 300px;
+
+      .form-container {
+        .form-group {
+          input {
+            font-size: 1rem;
+            padding: 6px;
+          }
+        }
+
+        .btn-register {
+          padding: 8px;
+          font-size: 1rem;
+        }
+      }
+
+      .register-link {
+        font-size: 1.5rem;
+
+        .btn-login {
+          font-size: 2rem;
+          background: none;
+          color: #66a6ff;
+          border: none;
+          text-decoration: underline;
+          cursor: pointer;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #89f7fe;
+          }
+        }
+      }
+    }
+  }
+}
+.error-validation{
+  font-size: 14px;
+    padding-bottom: 5px;
+    padding-left: 12px;
+    color: red;
+}
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // Adds spacing between the checkbox and the text
+  margin-top: 1rem;
+
+  input[type="checkbox"] {
+    margin: 0; // Removes default browser margins
+    max-width: 50px;
+    max-height: 50px;
+  }
+
+  label {
+    font-size: 0.9rem; // Adjust font size if needed
+    line-height: 1.2;  // Better alignment with checkbox
+  }
+
+  a {
+    color: #007bff;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
