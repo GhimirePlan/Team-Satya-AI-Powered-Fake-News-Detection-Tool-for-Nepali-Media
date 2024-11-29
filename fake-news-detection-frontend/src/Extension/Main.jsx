@@ -11,7 +11,7 @@ export default function Main() {
     const MainSettings = {
         onreportAdd: (issue) => {
             if (window.chrome.runtime) {
-                window.chrome.runtime.sendMessage({
+                window.chrome.runtime.sendMessage({url:window.location.href,
                     command: "ReportIssue",
                     message: issue
                 }, (response) => {
@@ -22,7 +22,7 @@ export default function Main() {
         onfeedbackAdd: (feedback) => {
             console.log(feedback)
             if (window.chrome.runtime) {
-                window.chrome.runtime.sendMessage({
+                window.chrome.runtime.sendMessage({url:window.location.href,
                     command: "Feedback",
                     message: feedback
                 }, (response) => {
@@ -42,7 +42,7 @@ export default function Main() {
 
             // 1. Send a message to the service worker requesting the news information
             if (window.chrome.runtime) {
-                window.chrome.runtime.sendMessage({ command: 'CheckNewsForthis', clipboard: false, news: content }, (response) => {
+                window.chrome.runtime.sendMessage({url:window.location.href, command: 'CheckNewsForthis', clipboard: false, news: content }, (response) => {
                     MainSettings.onresultResponse(response)
                 });
             }
@@ -241,7 +241,6 @@ function UIWindow({ MainSettings }) {
             predictionResult.current.style.display = 'none';
             MainUIFrame.current.ShowModal()
         }
-        
         // Fake news prediction function
         predictionResult.current.firstElementChild.style.display = "none"
         function predictNews(content) {
@@ -251,7 +250,7 @@ function UIWindow({ MainSettings }) {
                 socialShareDiv.current.style.display = 'none'
                 predictionResult.current.lastElementChild.style.display = 'none'
                 //sending to background js to make response to server
-                window.chrome.runtime.sendMessage({ command: 'CheckNewsForthis', clipboard: true, news: content }, (results) => {
+                window.chrome.runtime.sendMessage({url:window.location.href, command: 'CheckNewsForthis', clipboard: true, news: content }, (results) => {
                     setTimeout(() => {
                         submitButton.current.disabled = false
                     }, 10);
@@ -259,37 +258,29 @@ function UIWindow({ MainSettings }) {
                     predictionResult.current.firstElementChild.style.display = "none"
                     predictionResult.current.lastElementChild.style.display = 'block'
                     //dom render when result updated
-                    if (results.status) {
+
+                    if (results.connection !== false) {
+                        socialShareDiv.current.style.display = 'block'
+                        updateSocialShareButtons(content)
+                        predictionResult.current.lastElementChild.querySelector("h3").style.color = 'black'
+                        predictionResult.current.lastElementChild.querySelector(".description").innerHTML = results.searchfor
+                        predictionResult.current.lastElementChild.querySelector(".date").innerHTML =results.accuracy? results.accuracy.toFixed(2) + "%":""
+                        predictionResult.current.lastElementChild.querySelector(".source").innerHTML = results.authentic
+                        predictionResult.current.lastElementChild.querySelector(".date").classList.add("remove")
+                        predictionResult.current.lastElementChild.querySelector(".date").onclick = null
+                        predictionResult.current.lastElementChild.querySelector("h3").innerHTML = ""
+                    } else {
                         predictionResult.current.lastElementChild.querySelector(".description").innerHTML = results.news.description
                         predictionResult.current.lastElementChild.querySelector(".date").innerHTML = results.news.date
                         predictionResult.current.lastElementChild.querySelector(".source").innerHTML = results.news.source.title
-                        predictionResult.current.lastElementChild.querySelector(".source").onclick = () => {
-                            window.open(results.news.source.url)
-                        }
-                        if (results.connection !== false) {
-                            socialShareDiv.current.style.display = 'block'
-                            updateSocialShareButtons(content)
-                            predictionResult.current.lastElementChild.querySelector("h3").style.color = 'black'
-                        } else {
-                            socialShareDiv.current.style.display = 'none'
-                            predictionResult.current.lastElementChild.querySelector("h3").style.color = 'red'
-                        }
+                        socialShareDiv.current.style.display = 'none'
+                        predictionResult.current.lastElementChild.querySelector("h3").style.color = 'red'
                         predictionResult.current.lastElementChild.querySelector(".date").classList.add("remove")
                         predictionResult.current.lastElementChild.querySelector(".date").onclick = null
                         predictionResult.current.lastElementChild.querySelector("h3").innerHTML = results.news.title
-
-                    } else {
-                        predictionResult.current.lastElementChild.querySelector(".description").innerHTML = "This is may be added by someone mistakely or intentionally"
-                        predictionResult.current.lastElementChild.querySelector(".date").innerHTML = 'Report'
-                        predictionResult.current.lastElementChild.querySelector(".source").innerHTML = ''
-                        predictionResult.current.lastElementChild.querySelector(".date").classList.add("report")
-                        predictionResult.current.lastElementChild.querySelector(".date").onclick = () => {
-                            MainSettings.ReportIssuesFrame.current.showModal()
-                        }
-                        socialShareDiv.current.style.display = 'none'
-                        predictionResult.current.lastElementChild.querySelector(".source").onclick = null
-                        predictionResult.current.lastElementChild.querySelector("h3").innerHTML = "This is a Fake News"
                     }
+
+
                 });
             }
         }
@@ -298,26 +289,35 @@ function UIWindow({ MainSettings }) {
             socialShareDiv.current.style.display = 'block'
             shareFacebookButton.current.onclick = function () {
                 //sending to background js to make response to server and generating sharing link
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "facebook", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "facebook", searchfor: message })
             };
             shareTwitterButton.current.onclick = function () {
                 //sending to background js to make response to server and generating sharing link
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "twitter", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "twitter", searchfor: message })
 
             };
             shareWhatsAppButton.current.onclick = function () {
                 //sending to background js to make response to server and generating sharing link
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "whatsapp", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "whatsapp", searchfor: message })
             };
             CopyLink.current.onclick = function () {
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "copy", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "Copy", searchfor: message }, (linkToCopy) => {
+                    navigator.clipboard
+                        .writeText(linkToCopy)
+                        .then(() => {
+                            alert("Copied To clipboard")
+                        })
+                        .catch((error) => {
+                            console.error("Failed to copy the link:", error);
+                        });
+                })
             };
         }
         // Update language
         function updateLanguage() {
             title.current.textContent = currentLanguage === 'en' ? 'Fake News Detection' : 'झुटो समाचार पत्ता लगाउने';
             newsTextLabel.current.textContent = currentLanguage === 'en' ? 'Enter the news text:' : 'समाचारको पाठ प्रविष्ट गर्नुहोस्:';
-            feedbackHeader.current.textContent = currentLanguage === 'en' ? 'Insert News\' Text Here:' : 'यहाँ समाचारको पाठ राख्नुहोस्:';
+            feedbackHeader.current.textContent = currentLanguage === 'en' ? 'Insert Feedback Message:' : 'यहाँ प्रतिक्रिया राख्नुहोस्:';
             feedbackBtn.current.textContent = currentLanguage === 'en'
                 ? 'send Feedback'
                 : 'प्रतिक्रिया पठाउनुहोस्';
@@ -337,10 +337,9 @@ function UIWindow({ MainSettings }) {
             }
         }
         // Predict news when submit button is clicked
-        submitButton.current.onclick= function () {
+        submitButton.current.onclick = function () {
             const newsContent = newsTextArea.current.value.trim();
             if (newsContent.length >= 5) {
-
                 predictNews(newsContent);
                 newsTextArea.current.value = ""
                 submitButton.current.disabled = true
@@ -403,7 +402,7 @@ function UIWindow({ MainSettings }) {
                                 <span className="label left" id="en-label">EN</span>
                                 <span className="label right" id="ne-label">NE</span>
                             </div>
-                            <img src="https://kalika37.github.io/ReactBounceBallAndTodo/fake-news-icon.png" alt="Logo" width="100px" height="70px" style={{ width: '100px' }} />
+                            <img src="https://github.com/GhimirePlan/Team-Satya-AI-Powered-Fake-News-Detection-Tool-for-Nepali-Media/blob/main/favicon.png?raw=true" alt="Logo" width="100px" height="70px" style={{ width: '100px' }} />
                         </div>
                     </header>
 
@@ -415,11 +414,11 @@ function UIWindow({ MainSettings }) {
                             <button type="button" id="submit-button" ref={submitButton}>Predict</button>
                         </form>
 
-                        <div id="prediction-result" ref={predictionResult} style={{display:"none"}}>
+                        <div id="prediction-result" ref={predictionResult} style={{ display: "none" }}>
                             <div className="loadingicon">
                                 <SpinnerCircular thickness={200} speed={300} />
                             </div>
-                            <div className="content-component" style={{display:"none"}} >
+                            <div className="content-component" style={{ display: "none" }} >
                                 <h3> </h3>
                                 <div className="description">
                                 </div>
@@ -433,7 +432,7 @@ function UIWindow({ MainSettings }) {
                         <div id="social-share" ref={socialShareDiv} style={{
                             display: "none"
                         }}>
-                            <h2 id="feedback-header" ref={feedbackHeader}>Insert News' Text Here:</h2>
+                            <p id="feedback-header" ref={feedbackHeader}>Insert Feedback Message:</p>
                             <textarea id="news-text-fedback" placeholder="Enter Feedback..." ref={feedbacktextarea} ></textarea>
                             <div className="error"></div>
                             <div ref={reviewsfield}>
@@ -468,11 +467,8 @@ function UIWindow({ MainSettings }) {
                                 <button className="share-button" id="share-twitter" ref={shareTwitterButton}>
                                     <img src="https://x.com/favicon.ico" alt="" />
                                 </button>
-                                <button className="share-button" id="share-whatsapp" ref={shareWhatsAppButton}>
-                                    <img src="https://cdn3.iconfinder.com/data/icons/social-media-chamfered-corner/154/whatsapp-512.png" alt="" />
-                                </button>
                                 <button className="share-button" id="share-link" ref={CopyLink}>
-                                    Copy
+                                    <img src="https://cdn-icons-png.flaticon.com/512/10016/10016986.png" alt="" />
                                 </button>
                             </div>
                         </div>
@@ -504,20 +500,26 @@ function ResultFrame({ MainSettings }) {
         const shareFacebookButton = document.getElementById('share-facebook');
         const shareMore = document.getElementById('share-more');
         const shareTwitterButton = document.getElementById('share-twitter');
-        const shareWhatsAppButton = document.getElementById('share-whatsapp');
         function updateSocialShareButtons(message) {
             sharebuttons.current.style.display = 'block'
             shareFacebookButton.onclick = function () {
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "facebook", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "facebook", searchfor: message })
             };
             shareTwitterButton.onclick = function () {
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "twitter", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "twitter", searchfor: message })
             };
-            shareWhatsAppButton.onclick = function () {
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "whatsapp", searchfor: message })
-            };
+
             shareMore.onclick = function () {
-                window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "more", searchfor: message })
+                window.chrome.runtime.sendMessage({url:window.location.href, command: "ShareResult", shareto: "Copy", searchfor: message }, (linkToCopy) => {
+                    navigator.clipboard
+                        .writeText(linkToCopy)
+                        .then(() => {
+                            alert("Copied To clipboard")
+                        })
+                        .catch((error) => {
+                            console.error("Failed to copy the link:", error);
+                        });
+                })
             };
         }
         MainSettings.onresultResponse = (results) => {
@@ -526,36 +528,22 @@ function ResultFrame({ MainSettings }) {
             }
             loading.current.style.display = "none"
             resultframe.current.style.display = 'block'
-            if (results.status) {
-                if (results.connection !== false) {
-                    resultframe.current.querySelector("h3").style.color = 'black'
-                    sharebuttons.current.style.display = 'block'
-                    updateSocialShareButtons(results.searchfor)
-                } else {
-                    sharebuttons.current.style.display = 'none'
-                    resultframe.current.querySelector("h3").style.color = 'red'
-                }
+            if (results.connection !== false) {
+                resultframe.current.querySelector(".description").innerHTML = results.searchfor
+                resultframe.current.querySelector(".date").innerHTML =results.accuracy? results.accuracy.toFixed(2) + "%":""
+                resultframe.current.querySelector(".source").innerHTML = results.authentic
+                resultframe.current.querySelector("h3").innerHTML = ''
+                sharebuttons.current.style.display = 'block'
+                updateSocialShareButtons(results.searchfor)
+            } else {
+                sharebuttons.current.style.display = 'none'
+                resultframe.current.querySelector("h3").style.color = 'red'
                 resultframe.current.querySelector(".description").innerHTML = results.news.description
                 resultframe.current.querySelector(".date").innerHTML = results.news.date
                 resultframe.current.querySelector(".source").innerHTML = results.news.source.title
-                resultframe.current.querySelector(".source").onclick = () => {
-                    window.open(results.news.source.url)
-                }
                 resultframe.current.querySelector(".date").classList.add("remove")
                 resultframe.current.querySelector(".date").onclick = null
                 resultframe.current.querySelector("h3").innerHTML = results.news.title
-
-            } else {
-                resultframe.current.querySelector(".description").innerHTML = "This is may be added by someone mistakely or intentionally"
-                resultframe.current.querySelector(".date").innerHTML = 'Report'
-                resultframe.current.querySelector(".source").innerHTML = ''
-                resultframe.current.querySelector(".date").classList.add("report")
-                resultframe.current.querySelector(".date").onclick = () => {
-                    MainSettings.ReportIssuesFrame.current.showModal()
-                }
-                sharebuttons.current.style.display = 'none'
-                resultframe.current.querySelector(".source").onclick = null
-                resultframe.current.querySelector("h3").innerHTML = "This is a Fake News"
             }
         }
         MainSettings.onresultRequested = () => {
@@ -574,12 +562,11 @@ function ResultFrame({ MainSettings }) {
                     <SpinnerCircular thickness={200} speed={300} />
                 </div>
                 <div className="content-component" ref={resultframe}>
-                    <h3> News From Nepal</h3>
+                    <h3></h3>
                     <div className="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi perferendis nisi eos aperiam veritatis vitae dolorum exercitationem corrupti praesentium ea, eligendi maxime alias minus dolorem dolore! Doloremque inventore voluptatem eius?
                     </div>
                     <div className="date">
-                        2<sup>nd</sup> November
                     </div>
                     <div className="source report">
 
@@ -596,11 +583,8 @@ function ResultFrame({ MainSettings }) {
                             <button className="share-button" id="share-twitter">
                                 <img src="https://x.com/favicon.ico" alt="" />
                             </button>
-                            <button className="share-button" id="share-whatsapp">
-                                <img src="https://cdn3.iconfinder.com/data/icons/social-media-chamfered-corner/154/whatsapp-512.png" alt="" />
-                            </button>
                             <button className="share-button" id="share-more">
-                                Copy Link
+                                <img src="https://cdn-icons-png.flaticon.com/512/10016/10016986.png" alt="" />
                             </button>
 
                         </div>
@@ -664,7 +648,7 @@ function FeedbackFrame({ MainSettings }) {
     const reviewsfield = useRef(document.createElement("fieldset"))
     const [review_error, setReviewError] = useState("")
     const [review, setReview] = useState(0)
-    const reviewChanged = (e,value) => {
+    const reviewChanged = (e, value) => {
         e.preventDefault()
         setReview(value)
         const reviews = reviewsfield.current.querySelectorAll("span.review")
@@ -713,19 +697,19 @@ function FeedbackFrame({ MainSettings }) {
                 </fieldset>
                 <fieldset ref={reviewsfield}>
                     <legend>Give Review</legend>
-                    <span className="review" onClick={(e) => { reviewChanged(e,1) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                    <span className="review" onClick={(e) => { reviewChanged(e, 1) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
                         <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
                     </svg></span>
-                    <span className="review" onClick={(e) => { reviewChanged(e,2) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                    <span className="review" onClick={(e) => { reviewChanged(e, 2) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
                         <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
                     </svg></span>
-                    <span className="review" onClick={(e) => { reviewChanged(e,3) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                    <span className="review" onClick={(e) => { reviewChanged(e, 3) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
                         <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
                     </svg></span>
-                    <span className="review" onClick={(e) => { reviewChanged(e,4) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                    <span className="review" onClick={(e) => { reviewChanged(e, 4) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
                         <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
                     </svg></span>
-                    <span className="review" onClick={(e) => { reviewChanged(e,5) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                    <span className="review" onClick={(e) => { reviewChanged(e, 5) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
                         <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
                     </svg></span>
                     <div className="highlight error">
