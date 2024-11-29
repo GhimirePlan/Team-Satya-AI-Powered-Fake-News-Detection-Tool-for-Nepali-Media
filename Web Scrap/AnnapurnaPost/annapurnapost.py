@@ -11,7 +11,6 @@ sheet = workbook.active
 sheet.title = "Scraped News Data"
 sheet.append(["URL", "Heading (H1)", "Subheading (P)"])  # Adding header row
 
-# Path to the ChromeDriver 
 driver_path = r"C:\Users\PLAN\chromedriver-win64\chromedriver-win64\chromedriver.exe"  
 
 # Set up the ChromeDriver service
@@ -42,11 +41,9 @@ try:
             # Extract the page source
             soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-            # Find the <h1> tag inside <div class="news__title">
             heading_tag = soup.find('h1', class_='news__title')
             heading = heading_tag.get_text(strip=True) if heading_tag else "No Heading Found"
 
-            # Finding the <p> tags inside <div class="news__details">
             details_div = soup.find('div', class_='news__details')
             subheadings = [p.get_text(strip=True) for p in details_div.find_all('p')] if details_div else []
             subheading_text = "\n".join(subheadings) if subheadings else "No Subheadings Found"
