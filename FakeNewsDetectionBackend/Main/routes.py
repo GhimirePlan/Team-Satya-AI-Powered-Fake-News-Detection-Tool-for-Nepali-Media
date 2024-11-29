@@ -1,6 +1,6 @@
 from .views import MainPage,ReportIssuePage,FeedbackPage,ResultForExtension,ResultPage
 from django.urls import path
-
+ 
 urlpatterns = [
     path("",MainPage,name="index"),
     path("report_issue",ReportIssuePage,name="issue"),

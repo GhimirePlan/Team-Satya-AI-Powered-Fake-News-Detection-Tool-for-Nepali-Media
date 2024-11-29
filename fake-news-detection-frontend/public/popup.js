@@ -38,8 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
           predictionResult.lastElementChild.querySelector(".date").onclick = null
           predictionResult.lastElementChild.querySelector("h3").innerHTML = results.news.title
           if (results.connection !==false) { updateSocialShareButtons(content) }
+          else{
+            socialShareDiv.style.display='none'
+          }
 
         } else {
+          socialShareDiv.style.display='none'
           predictionResult.lastElementChild.querySelector(".description").innerHTML = "This is may be added by someone mistakely or intentionally"
           predictionResult.lastElementChild.querySelector(".date").innerHTML = 'Report'
           predictionResult.lastElementChild.querySelector(".source").innerHTML = ''
@@ -55,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   // Update social share buttons
   function updateSocialShareButtons(message) {
+    socialShareDiv.style.display='block'
     shareFacebookButton.onclick = function () {
       window.chrome.runtime.sendMessage({ command: "ShareResult", shareto: "facebook", searchfor: message })
     };
