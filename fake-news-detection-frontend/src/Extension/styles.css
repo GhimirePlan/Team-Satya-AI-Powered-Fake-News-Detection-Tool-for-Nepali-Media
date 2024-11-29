@@ -780,3 +780,11 @@ button.dark-mode:hover {
         transform: translateY(0);
     }
 }
+fieldset .review svg{
+    height: 30px;
+    width: 30px;
+    fill: gray;
+}
+fieldset .review.active svg{
+    fill: #f5de04;
+}

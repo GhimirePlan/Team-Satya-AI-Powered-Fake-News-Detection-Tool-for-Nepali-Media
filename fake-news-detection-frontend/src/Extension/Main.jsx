@@ -133,6 +133,9 @@ export default function Main() {
 
                 }
             }
+            if (e.key === "Escape") {
+                referenceMenuDialog.current.close()
+            }
             return false
         }
         //close menu when clicked outside the box
@@ -202,7 +205,33 @@ function UIWindow({ MainSettings }) {
     const shareTwitterButton = useRef(document.createElement("div"));
     const shareWhatsAppButton = useRef(document.createElement("div"));
     MainSettings.MainUIFrame = MainUIFrame
+    const reviewsfield = useRef(document.createElement("fieldset"))
+    const [review_error, setReviewError] = useState("")
+    const [review, setReview] = useState(0)
+    const reviewChanged = (value) => {
+        MainUIFrame.current.onkeydown = (e) => {
+            if (e.key === "Escape") {
+                MainUIFrame.current.close()
+            }
+        }
+        setReview(value)
+        const reviews = reviewsfield.current.querySelectorAll("span.review")
+        for (let index = 0; index < reviews.length; index++) {
+            const review = reviews[index];
+            if (index < value) {
+                review.classList.add("active")
+            } else {
+                review.classList.remove("active")
+            }
+
+        }
+    }
     useEffect(() => {
+        MainUIFrame.current.onkeydown = (e) => {
+            if (e.key === "Escape") {
+                MainUIFrame.current.close()
+            }
+        }
         closeBtn.current.onclick = () => {
             MainUIFrame.current.close()
         }
@@ -307,10 +336,13 @@ function UIWindow({ MainSettings }) {
         submitButton.current.addEventListener('click', function () {
             const newsContent = newsTextArea.current.value.trim();
             if (newsContent.length >= 5) {
-                predictNews(newsContent);
-                newsTextArea.current.value = ""
-                submitButton.current.disabled = true
-
+                if (review > 0) {
+                    predictNews(newsContent);
+                    newsTextArea.current.value = ""
+                    submitButton.current.disabled = true
+                }else{
+                    setReviewError("Reviews is required.")
+                }
             } else {
                 predictionResult.current.style.display = 'none';
                 socialShareDiv.current.style.display = 'none';
@@ -404,6 +436,27 @@ function UIWindow({ MainSettings }) {
                             <h2 id="feedback-header" ref={feedbackHeader}>Insert News' Text Here:</h2>
                             <textarea id="news-text-fedback" placeholder="Enter Feedback..." ref={feedbacktextarea} ></textarea>
                             <div className="error"></div>
+                            <div ref={reviewsfield}>
+                                <legend>Give Review</legend>
+                                <span className="review" onClick={() => { reviewChanged(1) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                                    <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                                </svg></span>
+                                <span className="review" onClick={() => { reviewChanged(2) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                                    <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                                </svg></span>
+                                <span className="review" onClick={() => { reviewChanged(3) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                                    <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                                </svg></span>
+                                <span className="review" onClick={() => { reviewChanged(4) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                                    <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                                </svg></span>
+                                <span className="review" onClick={() => { reviewChanged(5) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                                    <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                                </svg></span>
+                                <div className="highlight error">
+                                    {review_error}
+                                </div>
+                            </div>
                             <div className="button-group">
                                 <button id="feedback-btn" ref={feedbackBtn}>Send Feedback</button>
                             </div>
@@ -439,6 +492,11 @@ function ResultFrame({ MainSettings }) {
     const sharebuttons = useRef(document.createElement('div'))
     MainSettings.mainResultUIFrame = mainResultUIFrame
     useEffect(() => {
+        mainResultUIFrame.current.onkeydown = (e) => {
+            if (e.key === "Escape") {
+                mainResultUIFrame.current.close()
+            }
+        }
         closeBtn.current.onclick = () => {
             mainResultUIFrame.current.close()
         }
@@ -558,6 +616,11 @@ function ReportFrame({ MainSettings }) {
     const [issue, setIssue] = useState("")
     const [error, setError] = useState("")
     const onclickButton = () => {
+        ReportIssuesFrame.current.onkeydown = (e) => {
+            if (e.key === "Escape") {
+                ReportIssuesFrame.current.close()
+            }
+        }
         if (issue.trim().length < 5) {
             setError("Issue message length must be greater then 5")
         } else {
@@ -580,9 +643,9 @@ function ReportFrame({ MainSettings }) {
     return <>
         <dialog className='Response' ref={ReportIssuesFrame}>
             <div className="main">
-                <h3>Send Feedback - Fake News Detector</h3>
+                <h3>Report Issue - Fake News Detector</h3>
                 <fieldset>
-                    <legend>Feedback Detail</legend>
+                    <legend>Issue Detail</legend>
                     <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={issue} onChange={(e) => { setIssue(e.target.value) }}></textarea>
                 </fieldset>
                 <div className="highlight error">
@@ -598,13 +661,38 @@ function FeedbackFrame({ MainSettings }) {
     const FeedBackFrame = useRef(document.createElement("dialog"))
     const [feedback, setFeedback] = useState("")
     const [error, setError] = useState("")
+    const reviewsfield = useRef(document.createElement("fieldset"))
+    const [review_error, setReviewError] = useState("")
+    const [review, setReview] = useState(0)
+    const reviewChanged = (value) => {
+        FeedBackFrame.current.onkeydown = (e) => {
+            if (e.key === "Escape") {
+                FeedBackFrame.current.close()
+            }
+        }
+        setReview(value)
+        const reviews = reviewsfield.current.querySelectorAll("span.review")
+        for (let index = 0; index < reviews.length; index++) {
+            const review = reviews[index];
+            if (index < value) {
+                review.classList.add("active")
+            } else {
+                review.classList.remove("active")
+            }
+
+        }
+    }
     const onclickButton = () => {
         if (feedback.trim().length < 5) {
             setError("Feedback length must be greater then 5")
         } else {
-            setError("")
-            FeedBackFrame.current.close()
-            MainSettings.onfeedbackAdd(feedback)
+            if (review > 0) {
+                setError("")
+                FeedBackFrame.current.close()
+                MainSettings.onfeedbackAdd({ feedback, review })
+            } else {
+                setReviewError("Review is required..")
+            }
         }
     }
     useEffect(() => {
@@ -623,10 +711,32 @@ function FeedbackFrame({ MainSettings }) {
                 <fieldset>
                     <legend>Feedback Detail</legend>
                     <textarea name="feedback" placeholder='Enter Your Message...' id="issue" value={feedback} onChange={(e) => { setFeedback(e.target.value) }}></textarea>
+                    <div className="highlight error">
+                        {error}
+                    </div>
                 </fieldset>
-                <div className="highlight error">
-                    {error}
-                </div>
+                <fieldset ref={reviewsfield}>
+                    <legend>Give Review</legend>
+                    <span className="review" onClick={() => { reviewChanged(1) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                        <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                    </svg></span>
+                    <span className="review" onClick={() => { reviewChanged(2) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                        <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                    </svg></span>
+                    <span className="review" onClick={() => { reviewChanged(3) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                        <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                    </svg></span>
+                    <span className="review" onClick={() => { reviewChanged(4) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                        <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                    </svg></span>
+                    <span className="review" onClick={() => { reviewChanged(5) }}><svg xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" clipRule="evenodd" viewBox="0 0 500 500" id="star">
+                        <path d="M250,25L305.112,148.906C307.229,153.665 310.562,157.782 314.776,160.844C318.99,163.906 323.936,165.803 329.116,166.346L463.988,180.471L363.177,271.175C359.305,274.659 356.419,279.101 354.809,284.055C353.2,289.008 352.923,294.299 354.008,299.393L382.252,432.029L264.835,364.181C260.325,361.575 255.209,360.203 250,360.203C244.791,360.203 239.675,361.575 235.165,364.181L117.748,432.029L145.992,299.393C147.077,294.299 146.8,289.008 145.191,284.055C143.581,279.101 140.695,274.659 136.823,271.175L36.012,180.471L170.884,166.346C176.064,165.803 181.01,163.906 185.224,160.844C189.438,157.782 192.771,153.665 194.888,148.906L250,25Z" transform="translate(-25.612 -2.561)scale(1.10245)"></path>
+                    </svg></span>
+                    <div className="highlight error">
+                        {review_error}
+                    </div>
+                </fieldset>
+
                 <button onClick={onclickButton}> Submit </button>
             </div>
         </dialog>
