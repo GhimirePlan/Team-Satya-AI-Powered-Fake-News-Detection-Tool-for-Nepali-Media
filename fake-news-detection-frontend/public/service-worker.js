@@ -16,7 +16,7 @@ function ismobile() {
 const user = {
     connection: false,
     status: true,
-    searchfor: datas['content'],
+    searchfor: '',
     news: {
         description: "Something went wrong while loading response. Try again",
         title: "Invalid Response By Server",

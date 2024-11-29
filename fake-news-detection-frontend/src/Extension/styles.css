@@ -294,10 +294,12 @@ fieldset textarea:focus {
 }
 
 .content-component h3 {
-    text-align: left;
+    text-align: left!important;
     font-weight: 800;
 }
-
+label{
+    text-align: left!important;
+}
 .content-component .date {
     font-weight: 600;
     width: 100%;
@@ -586,8 +588,9 @@ button#auto-paste:hover {
 }
 
 #feedback-header {
-    font-size: 20px;
+    font-size: 15px;
     margin-bottom: 15px;
+    text-align: left!important;
     color: #2575fc;
 }
 
@@ -685,7 +688,6 @@ button.dark-mode:hover {
 
 #social-share {
     margin-top: 20px;
-    text-align: center;
     animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -780,11 +782,11 @@ button.dark-mode:hover {
         transform: translateY(0);
     }
 }
-fieldset .review svg{
+.review svg{
     height: 30px;
     width: 30px;
     fill: gray;
 }
-fieldset .review.active svg{
+.review.active svg{
     fill: #f5de04;
 }

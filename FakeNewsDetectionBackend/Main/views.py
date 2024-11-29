@@ -34,7 +34,19 @@ def ResultForExtension(request):
     if request.method=="POST":
         query=request.POST["content"]
         #further process from model 
-        context={}
+        context={
+        "news": {
+            "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint quas perferendis ad ratione, inventore doloribus fugit aliquid dolores tempore neque, asperiores nihil! Consequatur, repellendus? Adipisci laborum similique consequatur? Et, consequatur.",
+            "date": '3rd november 2024',
+            "title": "nepali news",
+            "source": {
+                "title": "kantipur",
+                "url": "https://kantipur.coms"
+            }
+        },
+        "searchfor":'',
+        "status":True
+    }
         return HttpResponse(json.dumps(context),content_type="application/json")
     return HttpResponse(json.dumps({
         "status":False
