@@ -19,7 +19,7 @@ class Kantipur:
     lists:List[Data]=[]
     def __init__(self,url="https://ekantipur.com/news"):
         # Path to the ChromeDriver (update the path to your ChromeDriver executable)
-        driver_path = r"C:\Users\pranj\scraping\chromedriver-win64\chromedriver.exe"  # Correct path to your driver
+        driver_path = r"C:\Users\PLAN\chromedriver-win64\chromedriver-win64\chromedriver.exe"# Correct path to your driver
 
         # Set up the ChromeDriver service
         service = Service(driver_path)
@@ -89,7 +89,7 @@ class Annapurna:
     lists:List[Data]=[]
     def __init__(self,url="https://www.annapurnapost.com/"):
         # Path to the ChromeDriver (update the path to your ChromeDriver executable)
-        driver_path = r"C:\Users\pranj\scraping\chromedriver-win64\chromedriver.exe"  # Correct path to your driver
+        driver_path = r"C:\Users\PLAN\chromedriver-win64\chromedriver-win64\chromedriver.exe"# Correct path to your driver
         # Set up the ChromeDriver service
         options = Options()
         options.add_argument("--headless")  # Optional: run in headless mode

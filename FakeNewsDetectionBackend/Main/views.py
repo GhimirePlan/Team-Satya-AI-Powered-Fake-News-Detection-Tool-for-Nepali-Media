@@ -27,6 +27,7 @@ def AddTodayNewsIfNotExists():
     IsThreadStarted=True
     today=datetime.today().date()
     if not TodaysNews.objects.filter(date=today).exists():
+        print("adding today news")
         TodaysNews.objects.create()
         scrapper=WebScrapper()
         data:News
